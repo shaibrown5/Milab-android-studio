@@ -37,7 +37,7 @@
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/almendra_sc"
         android:rotationY="33"
-        android:text="House Lannister"
+        android:text="House Lanister"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#BAAC2E"
         android:visibility="visible"
