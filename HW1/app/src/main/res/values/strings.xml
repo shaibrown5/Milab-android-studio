@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">GOTapp</string>
+    
+    <string-array name="stark_house">
+        <item>Eddard Stark</item>
+        <item>Catelyn Stark</item>
+        <item>Robb Stark</item>
+        <item>Sansa Stark</item>
+        <item>Bran Stark</item>
+        <item>Arya Stark</item>
+        <item>Rickon Stark</item>
+        <item>Jon Snow-Stark</item>
+    </string-array>
+
+    <string-array name="lannister_house">
+        <item>Tywin Lannister</item>
+        <item>Cersei Lannister</item>
+        <item>Jaime Lannister</item>
+        <item>Tyrion Lannister</item>
+        <item>Lancel Lannister</item>
+    </string-array>
 </resources>
