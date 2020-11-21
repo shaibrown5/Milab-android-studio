@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 public class StarkHouse extends AppCompatActivity {
@@ -23,6 +24,7 @@ public class StarkHouse extends AppCompatActivity {
 
         MyAdapter myAdapter = new MyAdapter(this, houseMemberNames, images);
         rView.setAdapter(myAdapter);
+        rView.setBackgroundColor(Color.parseColor("#7E8188"));
         rView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
