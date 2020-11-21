@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Layout;
 
 public class StarkHouse extends AppCompatActivity {
 
@@ -21,10 +22,8 @@ public class StarkHouse extends AppCompatActivity {
 
         houseMemberNames = getResources().getStringArray(R.array.stark_house);
         RecyclerView rView = (RecyclerView)findViewById(R.id.slist);
-
-        MyAdapter myAdapter = new MyAdapter(this, houseMemberNames, images);
+        MyAdapter myAdapter = new MyAdapter(this, houseMemberNames, images, "#7E8188");
         rView.setAdapter(myAdapter);
-        rView.setBackgroundColor(Color.parseColor("#7E8188"));
         rView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

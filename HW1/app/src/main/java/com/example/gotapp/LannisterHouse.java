@@ -22,9 +22,8 @@ public class LannisterHouse extends AppCompatActivity {
         houseMemberNames = getResources().getStringArray(R.array.lannister_house);
         RecyclerView rView = (RecyclerView)findViewById(R.id.lList);
 
-        MyAdapter myAdapter = new MyAdapter(this, houseMemberNames, images);
+        MyAdapter myAdapter = new MyAdapter(this, houseMemberNames, images, "#FFCC1212");
         rView.setAdapter(myAdapter);
-        rView.setBackgroundColor(Color.parseColor("#FFCC1212"));
         rView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
