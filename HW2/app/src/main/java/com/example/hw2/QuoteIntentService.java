@@ -63,7 +63,7 @@ public class QuoteIntentService extends IntentService {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime(),1000*10,
+                    SystemClock.elapsedRealtime(),fiveMin,
                     pendingIntent);
         }
     }
