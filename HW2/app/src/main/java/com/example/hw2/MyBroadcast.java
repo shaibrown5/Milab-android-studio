@@ -33,9 +33,8 @@ public class MyBroadcast extends BroadcastReceiver {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel
-                    (new NotificationChannel("C1",
-                            "C1", NotificationManager.IMPORTANCE_HIGH));
+            NotificationChannel channel = new NotificationChannel("C1", "C1", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 }
