@@ -22,30 +22,13 @@ import android.os.Bundle;
  */
 
 
-public class MainActivity extends AppCompatActivity {
-    static long fiveMin = 300000;
+public class MainActivity extends AppCompatActivity
     static int id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createNotificationChannel();
-
-        Intent intent = new Intent(MainActivity.this, MyBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0 ,intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmM = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmM.set(AlarmManager.RTC_WAKEUP,
-                1000*30,
-                pendingIntent);
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            NotificationChannel channel = new NotificationChannel("C1", "C1", NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     public static int getUniqueId(){

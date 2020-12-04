@@ -9,8 +9,8 @@ import android.os.SystemClock;
 
 public class QuoteIntentService extends IntentService {
 
-    private static final String SEND_QUOTE = "com.example.hw2.action.SEND.QUOTE";
-    private static final String CANCEL_QUOTE = "com.example.hw2.action.CANCEL.QUOTE";
+    private static final String SEND_QUOTE = "com.example.hw2.action.SEND";
+    private static final String CANCEL_QUOTE = "com.example.hw2.action.CANCEL";
     private static final int fiveMin = 300000;
 
     public QuoteIntentService() {

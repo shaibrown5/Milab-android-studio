@@ -13,8 +13,8 @@ public class Quotes{
 
     private static ArrayList<String> quotes = new ArrayList<>();
     static {
-        quotes.add(". My wife told me to stop impersonating a flamingo. I had to put my foot down.");
-        quotes.add("2. I went to buy some camo pants but couldn’t find any.");
+        quotes.add("My wife told me to stop impersonating a flamingo. I had to put my foot down.");
+        quotes.add("I went to buy some camo pants but couldn’t find any.");
         quotes.add("I failed math so many times at school, I can’t even count.");
         quotes.add("I used to have a handle on life, but then it broke.");
         quotes.add("I used to have a handle on life, but then it broke");
@@ -28,8 +28,8 @@ public class Quotes{
     }
 
 
-    public static String[] getQuote(){
+    public static String getQuote(){
         int index = (int) (Math.random() * quotes.size());
-        return new String[]{"quote of the moment:", quotes.get(index)};
+        return quotes.get(index);
     }
 }
