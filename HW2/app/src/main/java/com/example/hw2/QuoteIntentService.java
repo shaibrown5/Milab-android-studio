@@ -46,6 +46,9 @@ public class QuoteIntentService extends IntentService {
             } else if (CANCEL_QUOTE.equals(action)) {
                 handleActionCancel();
             }
+            else {
+                throw new RuntimeException("Unknown action provided");
+            }
         }
     }
 
@@ -60,7 +63,7 @@ public class QuoteIntentService extends IntentService {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime(),fiveMin,
+                    SystemClock.elapsedRealtime(),1000*10,
                     pendingIntent);
         }
     }
