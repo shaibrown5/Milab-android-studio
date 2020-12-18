@@ -4,12 +4,12 @@ const fs = require('fs');
 let app = express();
 app.use(bodyParser.json());
 
-app.get('/tasks'.(rew,res) => {
+app.get('/tasks',(req,res) => {
 	let jsonData = readJson();
 	res.send(jsonData);
 });
 
-app.get('/tasks/new'.(rew,res) => {
+app.get('/tasks/new',(req,res) => {
 	let jsonData = readJson();
 	let id = req.query.id || "NaN";
     let taskDescription = req.query.task || "None";
@@ -25,15 +25,18 @@ app.get('/tasks/new'.(rew,res) => {
 		writeJson(jsonData);
 	}
 	
-	res.send('Task added to json file.");
+	console.log('added task with id ' + id);
+	res.redirect('/tasks');
 });
 
-app.get('/tasks/remove?id=1'.(rew,res) => {
+app.get('/tasks/remove?id=',(req,res) => {
 	let jsonData = readJson();
 	let id = req.query.id
 	
 	delete jsonData.id
-	res.send('Task with ID ' + id + ' has been deleted');
+	
+	console.log('deleted task with id' + id);
+	res.redirect('/tasks');
 });
 	
 
@@ -49,7 +52,7 @@ function readJson(){
 }
 
 function writeJson(newTaskDict){
-	let data = JSON.stringify(newTaskDict, null, '\t');
-	fs.writeFileSync('./taskFile.json', data);
+	let data = JSON.stringify(newTaskDict, null, 2);
+	fs.writeFileSync('./tasksFile.json', data);
 }
 
