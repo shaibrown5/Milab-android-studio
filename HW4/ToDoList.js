@@ -29,13 +29,22 @@ app.get('/tasks/new',(req,res) => {
 	res.redirect('/tasks');
 });
 
-app.get('/tasks/remove?id=',(req,res) => {
+app.get('/tasks/remove',(req,res) => {
 	let jsonData = readJson();
-	let id = req.query.id
+	let id = req.query.id || NaN;
 	
-	delete jsonData.id
+	if(isNaN(id)){
+		res.send('Task must have an numbered ID');
+	}
+	else if(jsonData.hasOwnProperty(id){
+		delete jsonData[id];
+		writeJson(jsonData);
+		console.log('deleted task with id ' + id);
+	}
+	else{
+		res.send('no task with id ' + id + 'exists');
+	}		
 	
-	console.log('deleted task with id' + id);
 	res.redirect('/tasks');
 });
 	
