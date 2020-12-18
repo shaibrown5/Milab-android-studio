@@ -15,7 +15,7 @@ app.get('/tasks/new'.(rew,res) => {
     let taskDescription = req.query.task || "None";
 	
 	if(isNaN(id)){
-		res.send('Task must have an ID');
+		res.send('Task must have an numbered ID');
 	}
 	else if(jsonData.hasOwnProperty(id)){
 		res.send('Task ID is already taken, please choose a different ID');
@@ -30,9 +30,10 @@ app.get('/tasks/new'.(rew,res) => {
 
 app.get('/tasks/remove?id=1'.(rew,res) => {
 	let jsonData = readJson();
-	let id = req..query.id;
+	let id = req.query.id
 	
-	res.send('Hello World!");
+	delete jsonData.id
+	res.send('Task with ID ' + id + ' has been deleted');
 });
 	
 
