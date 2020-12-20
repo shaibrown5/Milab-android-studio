@@ -54,7 +54,11 @@ app.listen(8080,() => {
 });
 
 function readJson(){
-	let rawData = fs.readFileSync('./tasksFile.json');
+	let rawData = fs.readFileSync('./tasksFile.json', (err) => {
+        if (err){
+            console.log("Reading file info failed");
+            throw err;
+        });
 	let jsonData = JSON.parse(rawData);
 	
 	return jsonData;
@@ -62,6 +66,11 @@ function readJson(){
 
 function writeJson(newTaskDict){
 	let data = JSON.stringify(newTaskDict, null, 2);
-	fs.writeFileSync('./tasksFile.json', data);
+	fs.writeFileSync('./tasksFile.json', data (err) => {
+        if (err) {
+            console.log("Error writing to file", err);
+            throw err;
+        }
+	});
 }
 
