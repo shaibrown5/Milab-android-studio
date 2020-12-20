@@ -36,7 +36,7 @@ app.get('/tasks/remove',(req,res) => {
 	if(isNaN(id)){
 		res.send('Task must have an numbered ID');
 	}
-	else if(jsonData.hasOwnProperty(id){
+	else if(jsonData.hasOwnProperty(id)){
 		delete jsonData[id];
 		writeJson(jsonData);
 		console.log('deleted task with id ' + id);
