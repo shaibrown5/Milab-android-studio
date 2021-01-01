@@ -22,14 +22,14 @@ app.get('/server/:dir/:fileName',(req,res) => {
 	
 	// check that the path given 
 	if(fs.existsSync(path)){
-		//TODO PIPE THAT SHIT
+		//if open read stream and pipe it throught the res stream
 		var readStream = fs.createReadStream(path);
 		readStream.pipe(res);
 	}
 	else{
 		res.send("Path does not exist! please check the name of the dir and the file");
 	}
-});
+});	
 	
 app.listen(8080,() => {
 	console.log('Listening on port 8080!');
