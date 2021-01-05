@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "180843648306",
+    "project_id": "push-notification-b1b2b",
+    "storage_bucket": "push-notification-b1b2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180843648306:android:15d22b7d7e04b293b6332b",
+        "android_client_info": {
+          "package_name": "com.example.stocksapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180843648306-eq5vffdpffq9surt02eeunqjfljaljr3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe7qdvM2hu6pG5304Xrj-sPFrbvv49i_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "180843648306-eq5vffdpffq9surt02eeunqjfljaljr3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
