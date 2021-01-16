@@ -15,9 +15,21 @@ const API_KEY = "SH5K04OEMU4XCSF3";
 var symbol = "";
 let isSending = false;
 
+let tokens = {}; // this should probably be in a database
+
+app.post('/:user/token', (req, res, next) => {
+	let token = req.body.token;
+	console.log(`Received save token request from ${req.params.user} for token=${token}`);
+
+	if (!token) return res.status(400).json({ err: "missing token" });
+
+	tokens[req.params.user] = token;
+	Console.log("got token" + tokens);
+	res.status(200).json({ msg: "saved ok" });
+});
 
 // Post request for fetching stock info:
-app.post('/input', (req, res, next) => {
+app.post('/:user/input', (req, res, next) => {
 	// Reset interval (stop sending info for previous stock):
 	if (isSending) { // True only if a request has been sent previously
 		isSending = false;
@@ -29,14 +41,15 @@ app.post('/input', (req, res, next) => {
 	if(!symbol){
 		return res.status(400).json({ err: "missing symbol" })
 	}
-	let token = req.body.token;
-	if (!token) {
-		return res.status(400).json({ err: "missing token" });
-	}
+	console.log("the symbol is " + symbol);
+
+	let targetToken = tokens[req.params.user];
+	if (!targetToken) return res.status(404).json({ err: `no token for user ${req.params.user}` });
 
 	// Send request:
 	isSending = true;
 	let value = getStockInfo(symbol);
+	console.log("the value is " + vlaue);
 	sendStock(value, token);
 
 	interval = setInterval(() => sendStockInfo(symbol, targetToken), 15000);
@@ -49,8 +62,8 @@ app.post('/input', (req, res, next) => {
  * @param {any} token - token to send
  */
 function sendStock(value, token) {
-	let title = "Stock value:";
-	let body = symbol + "; " + value;
+	let title = symbol;
+	let body = value;
 
 	if (value == -1) {
 		title = "ERROR";
@@ -78,14 +91,14 @@ function sendStock(value, token) {
  * @param {any} symbol - the smbol of the wated stock
  */
 function getStockInfo(symbol) {
-	let URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}";
+	let URL = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}';
 	// -1 will represent error for us
 	let stockValue = -1;
 
 	request(usrl, (err, response, body) => {
 		if (err) {
 			console.log('error occured', err);
-			return res.error(err
+			return res.error(err);
         }
 		else {
 			let data = JSON.parse(body);
