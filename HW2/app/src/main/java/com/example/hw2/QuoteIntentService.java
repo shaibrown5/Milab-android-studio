@@ -1,4 +1,4 @@
-package com.example.hw2;
+ipackage com.example.hw2;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.os.SystemClock;
+
+import com.example.hw2.MyBroadcast;
 
 public class QuoteIntentService extends IntentService {
 
