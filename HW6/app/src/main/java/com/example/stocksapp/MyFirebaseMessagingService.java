@@ -30,7 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
     private RequestQueue m_queue;
-    private static final String m_REQUEST_URL = "http://37.142.0.36:8080/"; // tama
+    private static final String m_REQUEST_URL = "http://10.0.2.2:8080/";
     private static final String m_USERNAME = "username";
     private static final String m_Channel = "channel";
 
@@ -89,6 +89,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             });
 
+        }
+    }
+
+    private void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager != null){
+                NotificationChannel channel = new NotificationChannel("C1", "C1", NotificationManager.IMPORTANCE_HIGH);
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 
