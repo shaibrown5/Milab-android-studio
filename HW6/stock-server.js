@@ -15,16 +15,20 @@ const API_KEY = "SH5K04OEMU4XCSF3";
 var symbol = "";
 let isSending = false;
 
-let tokens = {}; // this should probably be in a database
+var tokens = {}; // this should probably be in a database
 
+// save token
 app.post('/:user/token', (req, res, next) => {
 	let token = req.body.token;
 	console.log(`Received save token request from ${req.params.user} for token=${token}`);
 
-	if (!token) return res.status(400).json({ err: "missing token" });
-
-	tokens[req.params.user] = token;
-	Console.log("got token" + tokens);
+	if (!token) {
+		console.log("missing token");
+		return res.status(400).json({ err: "missing token" });
+	}
+	user = req.params.user;
+	tokens.user = token;
+	console.log("got token---------------");
 	res.status(200).json({ msg: "saved ok" });
 });
 
@@ -38,21 +42,28 @@ app.post('/:user/input', (req, res, next) => {
 
 	// getting symbol query
 	symbol = req.body.stock;
-	if(!symbol){
+	if (!symbol) {
+		console.log("error with symbol");
 		return res.status(400).json({ err: "missing symbol" })
 	}
 	console.log("the symbol is " + symbol);
 
-	let targetToken = tokens[req.params.user];
-	if (!targetToken) return res.status(404).json({ err: `no token for user ${req.params.user}` });
+	let user = req.params.user;
+	let targetToken = tokens.user;
+	if (!targetToken) {
+		console.log("error with token in /input ------");
+		return res.status(404).json({ err: `no token for user ${req.params.user}` });
+	}
+
+	console.log("the symbol is " + symbol);
 
 	// Send request:
 	isSending = true;
 	let value = getStockInfo(symbol);
-	console.log("the value is " + vlaue);
-	sendStock(value, token);
+	console.log("the value is " + value);
+	sendStock(value, targetToken);
 
-	interval = setInterval(() => sendStockInfo(symbol, targetToken), 15000);
+	interval = setInterval(() => sendStock(value, targetToken), 15000);
 	return res.status(200).json({ msg: "msg sent successfully" });
 });
 
@@ -91,25 +102,31 @@ function sendStock(value, token) {
  * @param {any} symbol - the smbol of the wated stock
  */
 function getStockInfo(symbol) {
-	let URL = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}';
+	let URL = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`;
 	// -1 will represent error for us
 	let stockValue = -1;
-
-	request(usrl, (err, response, body) => {
+	
+	console.log("in get stock info #############");
+	console.log("the url is    " + URL);
+	request(URL, (err, response, body) => {
 		if (err) {
-			console.log('error occured', err);
+			console.log('error occured in get stock', err);
 			return res.error(err);
         }
 		else {
 			let data = JSON.parse(body);
+			console.log("the data body is " + body);
 
 			// check that we got the response we were expecting
 			if (data && data["Global Quote"]) {
-				stockValue = stockValue["Global Quote"]["05. price"];
+				stockValue = data["Global Quote"]["05. price"];
+				console.log("the stock value is " + stockValue);
+				return stockValue;
 			}
 		}
 	});
 
+	console.log("outside the parenthases the value is " + stockValue);
 	return stockValue;
 }
 
