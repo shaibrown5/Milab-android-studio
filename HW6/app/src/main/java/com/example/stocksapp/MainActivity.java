@@ -42,6 +42,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         m_queue = Volley.newRequestQueue(this);
+
+        // get token adn end to registration when the app is created
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Get new FCM registration token
+                token = task.getResult();
+                forceRegistrationToServer(token);
+                // Log and toast
+                Log.d(TAG, "token received" + token);
+                Toast.makeText(MainActivity.this, "token received", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         stockNameInput = (EditText) findViewById(R.id.userInput);
         submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -65,26 +85,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sends the sends the wanted symbol to the server
+     */
     public void sendStocks() {
-        // get token
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-
-                if (!task.isSuccessful()) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                    return;
-                }
-
-                // Get new FCM registration token
-                token = task.getResult();
-                // Log and toast
-                Log.d(TAG, "token received" + token);
-                Toast.makeText(MainActivity.this, "token received", Toast.LENGTH_SHORT).show();
-            }
-        });
-        // force sennd to server
-        forceRegistrationToServer(token);
 
         // create body with info to send to server
         JSONObject requestObject = new JSONObject();
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * this forces the server to rememeber the token, until we have mongodb
+     * force send the token wehn on create is called to the server
      * @param token
      */
     private void forceRegistrationToServer(String token) {
@@ -142,6 +146,4 @@ public class MainActivity extends AppCompatActivity {
                 });
         m_queue.add(req);
     }
-
-
 }

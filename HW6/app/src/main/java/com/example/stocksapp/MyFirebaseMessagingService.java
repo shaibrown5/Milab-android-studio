@@ -3,7 +3,6 @@ package com.example.stocksapp;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-    import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,9 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.core.app.NotificationCompat;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,7 +19,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +35,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onCreate();
         m_queue = Volley.newRequestQueue(this);
     }
-
 
     /**
      * Called when message is received.
@@ -65,7 +60,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                     Intent intent = new Intent(MyFirebaseMessagingService.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    //PendingIntent pendingIntent = new PendingIntent(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -75,13 +70,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         notificationManager.createNotificationChannel(channel);
                     }
 
+                    // builds the notification
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), m_Channel)
                             .setSmallIcon(R.drawable.notification)
                             .setContentTitle("Stock Update")
                             .setContentText(value + ": " + symbol)
                             .setAutoCancel(true)
                             .setPriority(NotificationManager.IMPORTANCE_HIGH);
-                            //.setContentIntent(pendingIntent);
 
                     NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
                     Log.d(TAG, "sending notification");
@@ -92,15 +87,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void createNotificationChannel(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            if (notificationManager != null){
-                NotificationChannel channel = new NotificationChannel("C1", "C1", NotificationManager.IMPORTANCE_HIGH);
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-    }
 
     /**
     * gets new token and send to registration
