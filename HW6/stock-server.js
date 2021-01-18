@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const request = require('request');
 const FCM = require('fcm-push');
-const AlphaVantageAPI = require('alpha-vantage-cli').AlphaVantageAPI;
 const serviceKey = 'AAAAKhsfFTI:APA91bHN1TEzNxsInwKu2QnSXPFIG27xW2_pErqtEEFghuYD4N5Uq6dh4jJKhqotYmkH2WgwKwKFU-3B70R4bQoIuMZkhG3w0_nRc22_ahZchpzLr02chXW7U3e4-zXSxbWNZIwevf1D';
 
 let app = express();
@@ -14,20 +13,19 @@ const API_KEY = "SH5K04OEMU4XCSF3";
 var symbol = "";
 let isSending = false;
 
-var tokens = {}; // this should probably be in a database
+var tokens = {}; // saves the usernames: tokens -- should be in db
 
-// save token
+// registers token
 app.post('/:user/token', (req, res, next) => {
 	let token = req.body.token;
-	console.log(`Received save token request from ${req.params.user} for token=${token}`);
 
 	if (!token) {
 		console.log("missing token");
 		return res.status(400).json({ err: "missing token" });
 	}
+
 	user = req.params.user;
 	tokens.user = token;
-	console.log("got token---------------");
 	res.status(200).json({ msg: "saved ok" });
 });
 
@@ -42,7 +40,6 @@ app.post('/:user/input', (req, res, next) => {
 	// getting symbol query
 	symbol = req.body.stock;
 	if (!symbol) {
-		console.log("error with symbol");
 		return res.status(400).json({ err: "missing symbol" })
 	}
 	console.log("the symbol is " + symbol);
@@ -50,50 +47,43 @@ app.post('/:user/input', (req, res, next) => {
 	let user = req.params.user;
 	let targetToken = tokens.user;
 	if (!targetToken) {
-		console.log("error with token in /input ------");
 		return res.status(404).json({ err: `no token for user ${req.params.user}` });
 	}
-
-	console.log("the symbol is " + symbol);
 
 	// Send request:
 	isSending = true;
 	sendStock(symbol, targetToken);
 
+	//set interval
 	interval = setInterval(() => sendStock(symbol, targetToken), 15000);
 	return res.status(200).json({ msg: "msg sent successfully" });
 });
 
 
 /**
- * 
+ * This function retrievs the value of the given symbol and send a notification to the user.
  *
- * @param {any} symbol
- * @param {any} token
+ * @param {any} symbol - the symbol wanted by the user
+ * @param {any} token- the users token
  */
 function sendStock(symbol, token) {
+	//api url
 	let URL = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`;
-	
 
-	console.log("in get stock info #############");
-	console.log("the url is    " + URL);
 	request(URL, (err, response, body) => {
 		
 		if (err) {
-			console.log('error occured in get stock', err);
 			return res.error(err);
         }
 		else {
-			console.log("the data body is " + body);
 			let data = JSON.parse(body);
-			// -1 will represent error for us
+			// -1 will represent error
 			let stockValue = -1;
 			let title = symbol;
 
 			// check that we got the response we were expecting
 			if (data && data["Global Quote"]) {
 				stockValue = data["Global Quote"]["05. price"];
-				console.log("the stock value is " + stockValue);
 			}
 
 			let msgBody = stockValue;
@@ -102,10 +92,8 @@ function sendStock(symbol, token) {
 				title = "ERROR";
 				msgBody = "ERROR"
 			}
-			console.log("the title is " + title);
-			console.log("the msg is " + msgBody);
 
-			// send the notification notification
+			// send the notification notification witht the tutle being the symbol and the body the value
 			fcm.send(fcmMsg ={
 				to: token,
 				notification: {
@@ -114,7 +102,7 @@ function sendStock(symbol, token) {
 				}
 			}, (err, response) => {
 				if (err) {
-					console.log("error sending the fcm message" + token);
+					return response.status(404).json({ err: `unable to send notification ${req.params.user}` });
 				}
 			});
 		}
