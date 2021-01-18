@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const https = require('https');
 const request = require('request');
 const FCM = require('fcm-push');
 const AlphaVantageAPI = require('alpha-vantage-cli').AlphaVantageAPI;
@@ -59,75 +58,69 @@ app.post('/:user/input', (req, res, next) => {
 
 	// Send request:
 	isSending = true;
-	let value = getStockInfo(symbol);
-	console.log("the value is " + value);
-	sendStock(value, targetToken);
+	sendStock(symbol, targetToken);
 
-	interval = setInterval(() => sendStock(value, targetToken), 15000);
+	interval = setInterval(() => sendStock(symbol, targetToken), 15000);
 	return res.status(200).json({ msg: "msg sent successfully" });
 });
 
-/**
- * This function send the stock value over FCM to the user
- * @param {any} value - value of the stock
- * @param {any} token - token to send
- */
-function sendStock(value, token) {
-	let title = symbol;
-	let body = value;
-
-	if (value == -1) {
-		title = "ERROR";
-		body = "ERROR"
-    }
-
-	// send the notification notification
-	fcm.send(fcmMsg = {
-		to: token,
-		notification: {
-			title: title,
-			body: body
-		}
-	}, (err, response) => {
-			if (err) {
-				console.log("error sending the fcm message" + token);
-		}
-	});
-
-	return;
-}
 
 /**
- * This method gets the stock info. returnds -1 if there was an error
- * @param {any} symbol - the smbol of the wated stock
+ * 
+ *
+ * @param {any} symbol
+ * @param {any} token
  */
-function getStockInfo(symbol) {
+function sendStock(symbol, token) {
 	let URL = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`;
-	// -1 will represent error for us
-	let stockValue = -1;
 	
+
 	console.log("in get stock info #############");
 	console.log("the url is    " + URL);
 	request(URL, (err, response, body) => {
+		
 		if (err) {
 			console.log('error occured in get stock', err);
 			return res.error(err);
         }
 		else {
-			let data = JSON.parse(body);
 			console.log("the data body is " + body);
+			let data = JSON.parse(body);
+			// -1 will represent error for us
+			let stockValue = -1;
+			let title = symbol;
 
 			// check that we got the response we were expecting
 			if (data && data["Global Quote"]) {
 				stockValue = data["Global Quote"]["05. price"];
 				console.log("the stock value is " + stockValue);
-				return stockValue;
 			}
+
+			let msgBody = stockValue;
+
+			if (stockValue == -1) {
+				title = "ERROR";
+				msgBody = "ERROR"
+			}
+			console.log("the title is " + title);
+			console.log("the msg is " + msgBody);
+
+			// send the notification notification
+			fcm.send(fcmMsg ={
+				to: token,
+				notification: {
+					title: title,
+					body: msgBody
+				}
+			}, (err, response) => {
+				if (err) {
+					console.log("error sending the fcm message" + token);
+				}
+			});
 		}
 	});
 
-	console.log("outside the parenthases the value is " + stockValue);
-	return stockValue;
+	return;
 }
 
 app.listen(8080,() => {
